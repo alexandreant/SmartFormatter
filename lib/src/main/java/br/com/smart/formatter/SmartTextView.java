@@ -30,7 +30,7 @@ public class SmartTextView extends TextView {
 
     @Override
     public void setText(CharSequence text, BufferType type) {
-        super.setText(SmartFormatter.format(getContext(), text), type);
+        super.setText(SmartFormatter.getFormatter(getContext()).from(text).format(), type);
     }
     
 }

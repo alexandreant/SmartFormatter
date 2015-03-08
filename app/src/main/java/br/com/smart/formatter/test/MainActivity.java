@@ -16,10 +16,12 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        TextView txt = (TextView) findViewById(R.id.txt1);
-        txt.setText(SmartFormatter.format(this, getString(R.string.frase)));
+        TextView txt1 = (TextView) findViewById(R.id.txt1);
+        txt1.setText(SmartFormatter.getFormatter(this).from(getString(R.string.frase)).format());
 
-//        TextView txt2 = (TextView) findViewById(R.id.txt2);
+        TextView txt3 = (TextView) findViewById(R.id.txt3);
+        txt3.setText(SmartFormatter.getFormatter(this).from(R.string.frase).format());
+
     }
 
 

@@ -3,37 +3,66 @@ package br.com.smart.formatter;
 import android.content.Context;
 import android.util.Log;
 
-import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import br.com.smart.formatter.environment.DiskEnvironment;
+import br.com.smart.formatter.environment.Environment;
+import br.com.smart.formatter.environment.StringsXMLEnvironment;
+import br.com.smart.formatter.environment.VolatileEnvironment;
 
 /**
  * Created by alexandre on 08/03/15.
  */
 public class SmartFormatter {
 
-    public static CharSequence format(Context context, int textId) {
-        return format(context, context.getString(textId));
+    private Context context;
+
+    private CharSequence text;
+
+    private final Map<String, Object> tags = new LinkedHashMap<String, Object>();
+
+    private SmartFormatter(Context context) {
+        this.context = context;
     }
 
-    public static CharSequence format(Context context, CharSequence text) {
+    public static SmartFormatter getFormatter(Context context){
+        return new SmartFormatter(context);
+    }
 
-        for (String tag : getAllFormatTags(text)) {
+    public SmartFormatter from(CharSequence text) {
+        this.text = text;
+        return this;
+    }
 
-            Log.d("format", "tag na lista: " + tag);
-            text = text.toString().replaceAll("\\{" + tag + "\\}", getTagValue(context, tag));
+    public SmartFormatter from(String text) {
+        return from(text);
+    }
+
+    public SmartFormatter from(int resId) {
+        return from(context.getString(resId));
+    }
+
+    public SmartFormatter with(String key, Object value) {
+        if (value != null) {
+            tags.put("\\{" + key + "\\}", value);
         }
-
-        return text;
+        return this;
     }
 
-    private static Set<String> getAllFormatTags(CharSequence text) {
+    public String format() {
+        String formatted = text.toString();
+        for (Map.Entry<String, Object> tag : tags.entrySet()) {
+            formatted = formatted.replaceAll(tag.getKey(), tag.getValue().toString());
+        }
+        return formatted;
+    }
+
+    private Set<String> getAllFormatTagsFromText() {
 
         Pattern pattern = Pattern.compile("\\{(.*?)\\}");
         Matcher matcher = pattern.matcher(text);
@@ -49,14 +78,28 @@ public class SmartFormatter {
         return matches;
     }
 
-    private static String getTagValue(Context context, String tag) {
+    private void setUpTags() {
+        for (String tag : getAllFormatTagsFromText()) {
+            with(tag, getTagValue(tag));
+        }
+    }
+
+    private String getTagValue(String tag) {
+        return getTagValue(tag, new VolatileEnvironment(), new DiskEnvironment(), new StringsXMLEnvironment());
+    }
+
+    private String getTagValue(String tag, Environment...envs) {
+
         String value = null;
-        int id = context.getResources().getIdentifier(tag, "string", context.getPackageName());
-        if (id > 0) {
-            value = context.getResources().getString(id);
+
+        for (Environment env : envs){
+            value = env.getTagValue(context, tag);
+            if(value != null){
+                return value;
+            }
         }
 
-        Log.d("getTagValue", "tag: " + tag + " - value: " + value);
         return value;
     }
+
 }
