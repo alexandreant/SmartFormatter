@@ -35,12 +35,13 @@ public class SmartFormatter {
     }
 
     public SmartFormatter from(CharSequence text) {
-        this.text = text;
-        return this;
+        return from(text.toString());
     }
 
     public SmartFormatter from(String text) {
-        return from(text);
+        this.text = text;
+        setUpTags();
+        return this;
     }
 
     public SmartFormatter from(int resId) {

@@ -9,6 +9,9 @@ public class VolatileEnvironment implements Environment {
 
     @Override
     public String getTagValue(Context context, String tag) {
+        if (VolatileRepository.getInstance().getValue(tag) == null) {
+            return null;
+        }
         return VolatileRepository.getInstance().getValue(tag).toString();
     }
 
