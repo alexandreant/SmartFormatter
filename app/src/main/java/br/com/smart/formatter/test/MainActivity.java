@@ -1,12 +1,14 @@
 package br.com.smart.formatter.test;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
 import br.com.smart.formatter.SmartFormatter;
+import br.com.smart.formatter.environment.DiskEnvironment;
+import br.com.smart.formatter.environment.VolatileEnvironment;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -16,11 +18,15 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        TextView txt1 = (TextView) findViewById(R.id.txt1);
-        txt1.setText(SmartFormatter.getFormatter(this).from(getString(R.string.frase)).format());
+        new DiskEnvironment().saveTagValue(getApplicationContext(), "DiskEnvironment", "(Essa foi setada em preferences!)");
+        new DiskEnvironment().saveTagValue(getApplicationContext(), "VolatileEnvironment", "(Essa foi setada em preferences!)");
+        new DiskEnvironment().saveTagValue(getApplicationContext(), "InstanceEnvironment", "(Essa foi setada em preferences!)");
 
-        TextView txt3 = (TextView) findViewById(R.id.txt3);
-        txt3.setText(SmartFormatter.getFormatter(this).from(R.string.frase).format());
+        new VolatileEnvironment().saveTagValue(getApplicationContext(), "VolatileEnvironment", "(Essa foi setada em singleton!)");
+        new VolatileEnvironment().saveTagValue(getApplicationContext(), "InstanceEnvironment", "(Essa foi setada em singleton!)");
+
+        TextView txt1 = (TextView) findViewById(R.id.txt1);
+        txt1.setText(SmartFormatter.getFormatter(this).from(getString(R.string.frase)).with("InstanceEnvironment","(Essa foi setada no uso do SmartFormatter!)").format());
 
     }
 

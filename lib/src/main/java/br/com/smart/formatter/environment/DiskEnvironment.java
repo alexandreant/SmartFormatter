@@ -18,7 +18,7 @@ public class DiskEnvironment implements Environment {
         savePreference(context, tag, value.toString());
     }
 
-    public static String getStringPreference(Context context, String prefKey, String defaultValue) {
+    private static String getStringPreference(Context context, String prefKey, String defaultValue) {
         return getSharedPreferences(context).getString(prefKey, defaultValue);
     }
 
