@@ -2,7 +2,29 @@
 
 It is a Android library for format strings using a tag instead position. It can be used with `String.format(...)` to be more powerful.
 
-## SmartTextView
+## Using SmartFormatter
+
+You can use the formatter when you want:
+
+```xml
+<resources>
+  <string name="text">This is my {hello_world} Sample {my_project}</string>
+</resources>
+```
+
+```java
+TextView txt = (TextView) findViewById(R.id.txt);
+
+String str = SmartFormatter.getFormatter(mContext)
+                .from(getString(R.string.text))
+                .with("hello_world","Hello world!")
+                .with("my_project","Project!")
+                .format()
+
+txt.setText(str);
+```
+
+## Using SmartTextView
 
 You can just create your words or texts in `strings.xml`.
 
@@ -14,7 +36,7 @@ You can just create your words or texts in `strings.xml`.
 </resources>
 ```
 
-Usin a SmartTextView in your layout xml:
+Using a SmartTextView in your layout xml:
 
 ```xml
 <br.com.smart.formatter.SmartTextView
