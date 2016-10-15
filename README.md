@@ -1,6 +1,6 @@
 # SmartFormatter
 
-It is a Android library for format strings using a tag instead position. It can be used with `String.format(...)` to be more powerful.
+It's an Android library to format strings using a tag instead position. It can be used with `String.format(...)` to be more powerful.
 
 ## Using SmartFormatter
 
